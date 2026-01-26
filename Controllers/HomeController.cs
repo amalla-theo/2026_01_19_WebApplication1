@@ -1,6 +1,7 @@
-using System.Diagnostics;
 using _2026_01_19_WebApplication1.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace _2026_01_19_WebApplication1.Controllers
 {
@@ -23,6 +24,7 @@ namespace _2026_01_19_WebApplication1.Controllers
             return View();
         }
 
+
         public IActionResult Lister()
         {
             LesPays pays = new LesPays();
@@ -30,10 +32,30 @@ namespace _2026_01_19_WebApplication1.Controllers
             return View(pays);
         }
 
+
         public IActionResult Privacy()
         {
             return View();
         }
+
+
+        public IActionResult Edit(int Id)
+        {
+            LesPays pays = new LesPays();
+            Pays p = new Pays();
+
+            if (TempData["pays"] != null)
+            {
+                pays = JsonConvert.DeserializeObject<LesPays>(TempData["pays"].ToString());
+                
+                p = pays[Id - 1];
+                TempData["pays"] = JsonConvert.SerializeObject(pays);
+                TempData.Keep();
+            }
+            return View(p);
+        }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
